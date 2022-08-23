@@ -57,3 +57,33 @@ function showDetails(menuItem){
     document.getElementById('rating-display').textContent = menuItem.rating
     document.getElementById('comment-display').textContent = menuItem.comment
 }
+
+// Process add new ramen form
+const domNewRamenForm = document.getElementById('new-ramen')
+domNewRamenForm.addEventListener('submit', e=>{
+    e.preventDefault()
+    const ramenObject = getRamenObject(e.target)
+    fetch('http://localhost:3000/ramens', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify(ramenObject)
+    })
+    .then(result => result.json())
+    .then(data => {
+        const menuItem = addItemToMenu(data)
+        handleClickOnItem(menuItem)
+    })
+})
+
+function getRamenObject(formSubmission){
+    return {
+        name: formSubmission.querySelector('#new-name').value,
+        restaurant: formSubmission.querySelector('#new-restaurant').value,
+        image: formSubmission.querySelector('#new-image').value,
+        rating: formSubmission.querySelector('#new-rating').value,
+        comment: formSubmission.querySelector('#new-comment').value
+    }
+}
